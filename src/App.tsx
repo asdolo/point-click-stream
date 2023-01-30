@@ -1,30 +1,34 @@
-import { useState } from 'react';
+import { QueryClient } from '@tanstack/query-core';
+import { QueryClientProvider } from '@tanstack/react-query';
 
-import { doNothing } from '~/constants/functions';
+import {useFlatPages} from '~/services/github/hooks';
+import { useGetIssues } from '~/services/github/queries';
 
 import './App.css';
 
-function App() {
-	const [count, setCount] = useState(0);
+const Issues = () => {
+	const { data, isLoading, hasNextPage, fetchNextPage } = useGetIssues();
 
-	doNothing();
+	const issues = useFlatPages(data);
 
 	return (
-		<div className="App">
-			<h1>Vite + React</h1>
-			<div className="card">
-				<button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-				</button>
-				<p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
+		<div>
+			<button onClick={() => fetchNextPage()} disabled={!hasNextPage}>Get next page</button>
+			{isLoading && <div>Loading...</div>}
+			<div className="games-container">
+				{issues.map((issue) => <span key={issue.id}>{issue.title}</span>)}
 			</div>
-			<p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-			</p>
 		</div>
 	);
-}
+};
+
+const queryClient = new QueryClient();
+
+
+const App = () => (
+	<QueryClientProvider client={queryClient}>
+		<Issues />
+	</QueryClientProvider>
+);
 
 export default App;
