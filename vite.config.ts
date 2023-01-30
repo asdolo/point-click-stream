@@ -9,6 +9,6 @@ export default defineConfig({
 			'~': path.resolve(__dirname, 'src'),
 		},
 	},
-
 	plugins: [react()],
+	base: '/point-click-stream'
 });
