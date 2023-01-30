@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import './App.css';
+
 import { doNothing } from '~/constants/functions';
+
+import './App.css';
 
 function App() {
 	const [count, setCount] = useState(0);
